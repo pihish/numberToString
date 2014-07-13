@@ -1,0 +1,146 @@
+<html>
+
+<body>
+
+<script>
+
+// Dictionaries / Objects / Associative Arrays we use as look-ups in our function
+var dictionary = {
+    0: "",
+    1: "One",
+    2: "Two",
+    3: "Three",
+    4: "Four",
+    5: "Five",
+    6: "Six",
+    7: "Seven",
+    8: "Eight",
+    9: "Nine"
+};
+
+var dictionaryTeen = {
+    1: "Eleven",
+    2: "Twelve",
+    3: "Thirteen",
+    4: "Fourteen",
+    5: "Fifteen",
+    6: "Sixteen",
+    7: "Seventeen",
+    8: "Eighteen",
+    9: "Nineteen"
+};
+
+var dictionaryTens = {
+    0: "",
+    1: "Ten",
+    2: "Twenty",
+    3: "Thirty",
+    4: "Forty",
+    5: "Fifty",
+    6: "Sixty",
+    7: "Seventy",
+    8: "Eighty",
+    9: "Ninety"
+};
+
+var dictionaryDigits = {
+    0: "",
+    1: "dictionaryTens",
+    2: "Hundred",
+    3: "Thousand"
+};
+
+
+
+// Assuming input can only be number characters and digits are in valid money format
+function myFunction(input){
+
+    // Convert to string since we want to use length() method later.  We use toFixed becaues we want to store 2 decimals
+    // even if only one is entered
+    input = input.toFixed(2);
+    // Split up string between integers and decimals
+    var splitInput = input.split(".");
+    var inputInteger = splitInput[0];
+
+    // Format decimals
+    var centsString;
+    var inputDecimal = splitInput[1];
+    // If amount entered is less than $1, get rid of 'and' from the cents string
+    if(parseInt(inputInteger) === 0){
+        centsString = inputDecimal + "/100";
+    }
+    else{
+        centsString = " and " + inputDecimal + "/100";
+    }
+
+    var length = inputInteger.length;
+
+    // Push each single digit into an array from back to front.  So last digit of number becomes index 0 of array
+    var digit = [];
+    for(var i = 1; i <= length; i++){
+        var value = inputInteger.substr(length - i, 1);
+        digit.push(value);
+    }
+
+    var output = "";
+    var appendWord, y;
+    for(var x = 0; x < digit.length; x++){
+        // 1 is the index for the tens digits and since the tens digits don't follow the standard English
+        // naming convention, we have a special process for parsing it
+        if(x === 1){
+            // Increment to get our indices lined up
+            y = x + 1;
+            // If tens number is between 10 and 20, handle differently
+            if(dictionaryTens[digit[x]] === dictionaryTens[1] && digit[0] > 0){
+                // Overwrite single digit column with a teen number string
+                output = dictionaryTeen[digit[x -1]];
+            }
+            // Otherwise, use standard tens term
+            else{
+                appendWord = dictionaryTens[digit[x]];
+                output = appendWord + " " + output;
+            }
+        }
+        // For non-tens digits, we append the standard post-word behind them
+        else{
+            appendWord = dictionaryDigits[x];
+            if(parseInt(digit[x]) !== 0){
+                output = dictionary[digit[x]] + " " + appendWord + " " + output;
+            }
+        }
+    }
+
+    output = output.trim();
+    // Piece together our integer and cents strings
+    output = output + centsString;
+    // Add 'dollars' to end of string
+    output = output + " dollars";
+
+    return output;
+
+}
+
+
+
+console.log(myFunction(3987));
+console.log(myFunction(2));
+console.log(myFunction(1000.00));
+console.log(myFunction(32.17));
+console.log(myFunction(1017.23));
+console.log(myFunction(3219.99));
+console.log(myFunction(73));
+console.log(myFunction(924.98));
+console.log(myFunction(211));
+console.log(myFunction(2810.12));
+console.log(myFunction(0.92));
+console.log(myFunction(12.02));
+console.log(myFunction(0.20));
+
+
+
+</script>
+
+</body>
+
+</html>
+
